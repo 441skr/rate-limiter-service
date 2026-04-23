@@ -1,28 +1,40 @@
 # Rate Limiter Service
 
-![Java](https://img.shields.io/badge/Java-17-orange) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2-green) ![Redis](https://img.shields.io/badge/Redis-7-red) ![Docker](https://img.shields.io/badge/Docker-ready-blue)
+![Java](https://img.shields.io/badge/Java-17-orange)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2-green)
+![Redis](https://img.shields.io/badge/Redis-7-red)
+![Docker](https://img.shields.io/badge/Docker-ready-blue)
+![Live](https://img.shields.io/badge/Live-Demo-brightgreen)
 
 A production-grade distributed rate limiting microservice built with Spring Boot 3 and Redis. Implements a sliding window counter algorithm to throttle API requests per client IP — handles 500K+ daily requests with sub-10ms overhead.
 
-## Architecture
+## 🚀 Live Demo
 
-```
+**Base URL:** `https://rate-limiter-service-9hzq.onrender.com`
+
+| Endpoint | URL | Description |
+|---|---|---|
+| Health Check | [`/api/health`](https://rate-limiter-service-9hzq.onrender.com/api/health) | Returns service status |
+| Rate-Limited API | [`/api/data`](https://rate-limiter-service-9hzq.onrender.com/api/data) | 100 req/min per IP |
+| Metrics | [`/actuator/prometheus`](https://rate-limiter-service-9hzq.onrender.com/actuator/prometheus) | Prometheus metrics |
+
+> ⚠️ Hosted on Render free tier — first request may take ~30s to wake up.
+
+## Architecture
 Client Request
-    |
-    v
+|
+v
 RateLimitFilter (OncePerRequestFilter)
-    |
-    |-- Extract client IP (supports X-Forwarded-For)
-    |
-    v
+|
+|-- Extract client IP (supports X-Forwarded-For)
+v
 RateLimiterService
-    |
-    |-- Redis INCR + TTL (atomic, thread-safe)
-    |
-    |-- count <= 100  -->  ApiController  -->  HTTP 200
-    |
-    |-- count > 100   -->  HTTP 429 (Too Many Requests)
-```
+|
+|-- Redis INCR + TTL (atomic, thread-safe)
+|-- count <= 100 --> ApiController --> HTTP 200
+|-- count > 100 --> HTTP 429 (Too Many Requests)
+
+text
 
 ## Tech Stack
 
@@ -39,18 +51,14 @@ RateLimiterService
 ### Prerequisites
 - Docker Desktop installed
 
-### Start everything with one command
-
+### Start with one command
 ```bash
 git clone https://github.com/441skr/rate-limiter-service.git
 cd rate-limiter-service
 docker-compose up --build
 ```
 
-This starts Redis + the Spring Boot app automatically.
-
 ### Test the API
-
 ```bash
 # Health check
 curl http://localhost:8080/api/health
