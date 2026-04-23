@@ -7,8 +7,14 @@ spring:
   data:
     redis:
       url: ${REDIS_URL:redis://localhost:6379}
-      ssl:
-        enabled: true
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+  redis:
+    ssl:
+      enabled: true
 
 management:
   endpoints:
