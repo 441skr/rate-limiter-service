@@ -6,15 +6,11 @@ spring:
     name: rate-limiter-service
   data:
     redis:
-      url: ${REDIS_URL:redis://localhost:6379}
-      lettuce:
-        pool:
-          max-active: 8
-          max-idle: 8
-          min-idle: 0
-  redis:
-    ssl:
-      enabled: true
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      ssl:
+        enabled: ${REDIS_SSL:false}
 
 management:
   endpoints:
