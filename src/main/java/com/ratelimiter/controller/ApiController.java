@@ -1,25 +1,38 @@
 package com.ratelimiter.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
 public class ApiController {
 
-    @GetMapping("/data")
-    public ResponseEntity<Map<String, Object>> getData() {
-        return ResponseEntity.ok(Map.of(
-            "status", "success",
-            "message", "Request processed successfully",
-            "timestamp", System.currentTimeMillis()
-        ));
+    // Redirect root "/" to "/api/health"
+    @GetMapping("/")
+    public void root(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/api/health");
     }
 
-    @GetMapping("/health")
+    @GetMapping("/api/health")
     public ResponseEntity<Map<String, String>> health() {
-        return ResponseEntity.ok(Map.of("status", "UP"));
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "UP");
+        response.put("service", "rate-limiter-service");
+        response.put("timestamp", Instant.now().toString());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/api/data")
+    public ResponseEntity<Map<String, Object>> getData() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", Instant.now().toEpochMilli());
+        response.put("message", "Request processed successfully");
+        response.put("status", "success");
+        return ResponseEntity.ok(response);
     }
 }
