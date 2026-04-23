@@ -6,8 +6,9 @@ spring:
     name: rate-limiter-service
   data:
     redis:
-      host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6379}
+      url: ${REDIS_URL:redis://localhost:6379}
+      ssl:
+        enabled: true
 
 management:
   endpoints:
